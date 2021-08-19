@@ -45,42 +45,42 @@ Creación, puesta en marcha y coordinación de hilos.
 
 3. Lo que se le ha pedido es: debe modificar la aplicación de manera que cuando hayan transcurrido 5 segundos desde que se inició la ejecución, se detengan todos los hilos y se muestre el número de primos encontrados hasta el momento. Luego, se debe esperar a que el usuario presione ENTER para reanudar la ejecución de los mismo.
 
-```java
-public class Main {
-
-	public static void main(String[] args) {
-		
-		PrimeFinderThread pft1=new PrimeFinderThread(0, 10000000);
-		PrimeFinderThread pft2=new PrimeFinderThread(10000000, 20000000);
-		PrimeFinderThread pft3=new PrimeFinderThread(20000000, 30000000);
-		pft1.start();
-		pft2.start();
-		pft3.start();
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		new Timer().schedule(
-				new TimerTask() {
-					@Override
-					public void run() {
-						try{
-							pft1.suspend();
-							pft2.suspend();
-							pft3.suspend();
-							while (br.read() != '\n'){
-								br.read();
-							}
-							pft1.resume();
-							pft2.resume();
-							pft3.resume();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-					}
-				}
-		,5000);
-	}
-}
-```
+> ```java
+> public class Main {
+>
+>	public static void main(String[] args) {
+>		
+>		PrimeFinderThread pft1=new PrimeFinderThread(0, 10000000);
+>		PrimeFinderThread pft2=new PrimeFinderThread(10000000, 20000000);
+>		PrimeFinderThread pft3=new PrimeFinderThread(20000000, 30000000);
+>		pft1.start();
+>		pft2.start();
+>		pft3.start();
+>		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+>		new Timer().schedule(
+>				new TimerTask() {
+>					@Override
+>					public void run() {
+>						try{
+>							pft1.suspend();
+>							pft2.suspend();
+>							pft3.suspend();
+>							while (br.read() != '\n'){
+>								br.read();
+>							}
+>							pft1.resume();
+>							pft2.resume();
+>							pft3.resume();
+>						} catch (IOException e) {
+>							e.printStackTrace();
+>						}
+>
+>					}
+>				}
+>		,5000);
+>	}
+> }
+> ```
 
 
 ### Parte II 
@@ -113,46 +113,44 @@ Parte III
     
     > Para solucionar este problema hacemos uso del metodo ```join()``` de la clase ```Thread``` dentro de un ciclo que inicializa este metodo para cada objeto de tipo ```Galgo``` guardado en el arreglo ```galgos``` asi espera a que finalice y muera el Thread de un galgo para mostrar el gandor, sin embargo al hacer esto cada vez que terminara un galgo mostraria el mensaje del ganador, asi que para evitar esto se instaura una condición con una variable booleana ```carreraGanada``` que indica que cuando esta sea ```false``` es porque nadie ha ganado y puedo mostrar el mensaje, esta variable inicia en ```false```pero en cuanto el primer galgo finalice es decir cuando el primer thread muera, cambiara el estado de la variable a ```true``` para que no vuelva a mostrar el mensaje.
     
-    ```java
-    can.setStartAction(
-                new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-						//como acción, se crea un nuevo hilo que cree los hilos
-                        //'galgos', los pone a correr, y luego muestra los resultados.
-                        //La acción del botón se realiza en un hilo aparte para evitar
-                        //bloquear la interfaz gráfica.
-                        ((JButton) e.getSource()).setEnabled(false);
-                        new Thread() {
-                            public void run() {
-                                for (int i = 0; i < can.getNumCarriles(); i++) {
-                                    //crea los hilos 'galgos'
-                                    galgos[i] = new Galgo(can.getCarril(i), "" + i, reg);
-                                    //inicia los hilos
-                                    galgos[i].start();
-
-                                }
-                               boolean carreraGanada=false;
-                                for (Galgo g: galgos){
-                                    try {
-                                        g.join();
-                                        if(!carreraGanada) {
-                                            can.winnerDialog(reg.getGanador(), reg.getUltimaPosicionAlcanzada() - 1);
-                                            System.out.println("El ganador fue:" + reg.getGanador());
-                                            carreraGanada = true;
-                                        }
-                                    }catch (InterruptedException ex){
-                                        ex.printStackTrace();
-                                    }
-                                }
-                            }
-                        }.start();
-
-                    }
-                }
-        );
-    ```
+    > ```java
+    > can.setStartAction(
+    >            new ActionListener() {
+    >
+    >                @Override
+    >                public void actionPerformed(final ActionEvent e) {
+    >			//como acción, se crea un nuevo hilo que cree los hilos
+    >                    //'galgos', los pone a correr, y luego muestra los resultados.
+    >                    //La acción del botón se realiza en un hilo aparte para evitar
+    >                    //bloquear la interfaz gráfica.
+    >                    ((JButton) e.getSource()).setEnabled(false);
+    >                    new Thread() {
+    >                        public void run() {
+    >                            for (int i = 0; i < can.getNumCarriles(); i++) {
+    >                                //crea los hilos 'galgos'
+    >                                galgos[i] = new Galgo(can.getCarril(i), "" + i, reg);
+    >                                //inicia los hilos
+    >                                galgos[i].start();
+    >                            }
+    >                           boolean carreraGanada=false;
+    >                            for (Galgo g: galgos){
+    >                                try {
+    >                                    g.join();
+    >                                    if(!carreraGanada) {
+    >                                        can.winnerDialog(reg.getGanador(), reg.getUltimaPosicionAlcanzada() - 1);
+    >                                        System.out.println("El ganador fue:" + reg.getGanador());
+    >                                        carreraGanada = true;
+    >                                    }
+    >                                }catch (InterruptedException ex){
+    >                                    ex.printStackTrace();
+    >                                }
+    >                            }
+    >                        }
+    >                    }.start();
+    >                }
+    >            }
+    >    );
+    > ```
     
     
 
