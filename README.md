@@ -36,7 +36,7 @@ Creación, puesta en marcha y coordinación de hilos.
 >    }
 > }
 > ```
-
+>
 > Podemos observar que el consumo de CPU es mayor, debido a que hace la ejecución de los datos mas veloz, asi mismo se refleja que el consumo de CPU es por menor tiempo
 > 
 > ![](/img/media/proceso2.PNG)
@@ -112,7 +112,7 @@ Parte III
     b.  Puede utilizarse el método join() de la clase Thread para sincronizar el hilo que inicia la carrera, con la finalización de los hilos de los galgos.
     
     > Para solucionar este problema hacemos uso del metodo ```join()``` de la clase ```Thread``` dentro de un ciclo que inicializa este metodo para cada objeto de tipo ```Galgo``` guardado en el arreglo ```galgos``` asi espera a que finalice y muera el Thread de un galgo para mostrar el gandor, sin embargo al hacer esto cada vez que terminara un galgo mostraria el mensaje del ganador, asi que para evitar esto se instaura una condición con una variable booleana ```carreraGanada``` que indica que cuando esta sea ```false``` es porque nadie ha ganado y puedo mostrar el mensaje, esta variable inicia en ```false```pero en cuanto el primer galgo finalice es decir cuando el primer thread muera, cambiara el estado de la variable a ```true``` para que no vuelva a mostrar el mensaje.
-    
+    >
     > ```java
     > can.setStartAction(
     >            new ActionListener() {
@@ -151,7 +151,18 @@ Parte III
     >            }
     >    );
     > ```
-    
+    >
+    > Podemos observar que ahora al iniciar la aplicación no nos muestra el mensaje de ganador
+    > 
+    > ![](/img/media/Carera1.PNG)
+    > 
+    > Aca observamos que una vez llegado el primer galgo muestra el mensaje del ganador
+    > 
+    > ![](/img/media/resultadocarrera1)
+    >
+    > Ahora vemos el outpt de la aplicación por consola
+    > 
+    > ![](/img/media/consolacarrera1)
     
 
 2.  Una vez corregido el problema inicial, corra la aplicación varias
@@ -160,13 +171,139 @@ Parte III
     podrían salir resultados válidos, pero en otros se pueden presentar
     dichas inconsistencias). A partir de esto, identifique las regiones
     críticas () del programa.
+    
+    > El error que encontramos es que cuando finalizan 2 galgos relaticamente al mismo tiempo, usan el mismo recurso en la clase de ```RegistroLlegada``` y marcan la misma posición de llegada, como podemos observar en la imagen anterior.
 
 3.  Utilice un mecanismo de sincronización para garantizar que a dichas
     regiones críticas sólo acceda un hilo a la vez. Verifique los
     resultados.
+    
+    > Para solucionar este problema nos dirigimos al metodo ```corra()``` de la clase ```Galgo``` y antes de marcar la variable ```ubicación``` de este objeto con la información que trae del metodo ```getUltimaPosicionAlcanzada()``` del objeto ```regl``` de tipo ```RegistroLlegada``` hacemos uso de la función ```synchronized``` sobre el objeto ```regl``` para que identifique si el recurso esta en uso y que en caso de estarlo espere a que lo liberen para continuar, asi solo de a un galgo ingresan a marcar su posición.
+    > ```java
+    > public void corra() throws InterruptedException {
+	>	while (paso < carril.size()) {
+	>		Thread.sleep(100);
+	>		carril.setPasoOn(paso++);
+	>		carril.displayPasos(paso);
+	>		if (paso == carril.size()) {
+	>			carril.finish();
+	>			synchronized (regl) {
+	>				int ubicacion = regl.getUltimaPosicionAlcanzada();
+	>				regl.setUltimaPosicionAlcanzada(ubicacion + 1);
+	>				System.out.println("El galgo " + this.getName() + " llego en la posicion " + ubicacion);
+	>				if (ubicacion == 1) {
+	>					regl.setGanador(this.getName());
+	>				}
+	>			}
+	>		}
+    >    }
+	> }
+	> ```
+	> 
+	> En este resultado que nos muestra la consela observamos que el problema ha sido solucionado y que cada posición esta asignada a un unico galgo
+	> 
+	> ![](/img/media/consolacarrera2)
 
 4.  Implemente las funcionalidades de pausa y continuar. Con estas,
     cuando se haga clic en ‘Stop’, todos los hilos de los galgos
     deberían dormirse, y cuando se haga clic en ‘Continue’ los mismos
     deberían despertarse y continuar con la carrera. Diseñe una solución que permita hacer esto utilizando los mecanismos de sincronización con las primitivas de los Locks provistos por el lenguaje (wait y notifyAll).
+    
+    > Para realizar estas dos funcionalidades se creo una variable booleana ```pause``` que indica si la ejecución se encuentra o no en pausa  y un metodo  ```setPause()``` para realizar el cambio de estado de la variable
+    > 
+    > ```java
+    > public void setPause(boolean pause) {
+	>	this.pause = pause;
+	> }
+	> ```
+	> 
+	> También tuvimos que completar las funcionalidades de los botones ```setStopAction``` y ```setContinueAction```.
+	> En el caso de ```setStopAction``` se hizo que para cada galgo creado se cmabiara el estado de la variable ```pause``` a true
+	> 
+	> ```java
+	> can.setStopAction(
+    >            new ActionListener() {
+    >                @Override
+    >                public void actionPerformed(ActionEvent e) {
+    >                    for (Galgo g: galgos){
+    >                        g.setPause(true);
+    >                    }
+    >                    System.out.println("Carrera pausada!");
+    >                }
+    >            }
+    >    );
+    > ```
+    >    
+    > Y en el caso de ```setStopAction``` se hizo que para cada galgo creado se cambiara el estado de la variable ```pause``` a false y hacemos uso del metodo ```notifyAll()``` de la clase ```Thread``` para que active todo los hilos que se encuentran bloqueados en ```reg```
+    > 
+    > ```java
+    > can.setContinueAction(
+    >            new ActionListener() {
+    >                @Override
+    >                public void actionPerformed(ActionEvent e) {
+    >                    synchronized (reg) {
+    >                        reg.notifyAll();
+    >                        for (Galgo g : galgos) {
+    >                            g.setPause(false);
+    >                        }
+    >                        System.out.println("Carrera reanudada!");
+    >                    }
+    >                }
+    >            }
+    >    );
+    > ```
+    >    
+    > Ademas tambien debimos implementar el metodo getReg() en la clase ```MainCanodromo``` el cual sirve para obtener el objeto ```reg```
+    > 
+    > ```java   
+    > public static RegistroLlegada getReg() {
+    >    return reg;
+    > }
+    > ```
+    > 
+    > También se creo un metodo llamado ```Pause```en la clase ```Galgo``` que coloca en espera ese registro en el objeto ```reg```
+    > 
+    > ```java
+    > public void pause() {
+	>	synchronized (MainCanodromo.getReg()) {
+	>		try {
+	>			MainCanodromo.getReg().wait();
+	>		} catch (InterruptedException e) {
+	>			e.printStackTrace();
+	>		}
+	>	}
+	> }
+	> ```
+	> 
+	> Finalmente en el metodo ```corre()``` de la clase ```Galgo``` colocamos una condición en la cual si la variable ```pause``` indica que no esta pausado continue su ejecución normal, pero en caso de que indique que si esta pausada invoque el metodo ```pause()```
+	> 
+	> ```java
+	> public void corra() throws InterruptedException {
+	>	while (paso < carril.size()) {
+	>		if (!pause) {
+	>			Thread.sleep(100);
+	>			carril.setPasoOn(paso++);
+	>			carril.displayPasos(paso);
+	>			if (paso == carril.size()) {
+	>				carril.finish();
+	>				synchronized (regl) {
+	>					int ubicacion = regl.getUltimaPosicionAlcanzada();
+	>					regl.setUltimaPosicionAlcanzada(ubicacion + 1);
+	>					System.out.println("El galgo " + this.getName() + " llego en la posicion " + ubicacion);
+	>					if (ubicacion == 1) {
+	>						regl.setGanador(this.getName());
+	>					}
+	>				}
+	>			}
+	>		}
+	>		else{
+	>			pause();
+	>		}
+	>	}
+	> }
+	> ```
+
+
+    
+
 
