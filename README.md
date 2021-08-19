@@ -41,8 +41,9 @@ public class Main {
 
 Podemos observar que el consumo de CPU es mayor, debido a que hace la ejecución de los datos mas veloz, asi mismo se refleja que el consumo de CPU es por menor tiempo
 
-![](/img/media/proceso1)
-![](/img/media/CPU1)
+![](/img/media/proceso2)
+
+![](/img/media/CPU2)
 
 3. Lo que se le ha pedido es: debe modificar la aplicación de manera que cuando hayan transcurrido 5 segundos desde que se inició la ejecución, se detengan todos los hilos y se muestre el número de primos encontrados hasta el momento. Luego, se debe esperar a que el usuario presione ENTER para reanudar la ejecución de los mismo.
 
