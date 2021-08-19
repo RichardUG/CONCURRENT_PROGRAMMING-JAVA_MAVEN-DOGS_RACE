@@ -110,6 +110,49 @@ Parte III
     a.  La acción de iniciar la carrera y mostrar los resultados se realiza a partir de la línea 38 de MainCanodromo.
 
     b.  Puede utilizarse el método join() de la clase Thread para sincronizar el hilo que inicia la carrera, con la finalización de los hilos de los galgos.
+    
+    > Para solucionar este problema hacemos uso del metodo ```join()``` de la clase ```Thread``` dentro de un ciclo que inicializa este metodo para cada objeto de tipo ```Galgo``` guardado en el arreglo ```galgos``` asi espera a que finalice y muera el Thread de un galgo para mostrar el gandor, sin embargo al hacer esto cada vez que terminara un galgo mostraria el mensaje del ganador, asi que para evitar esto se instaura una condición con una variable booleana ```carreraGanada``` que indica que cuando esta sea ```false``` es porque nadie ha ganado y puedo mostrar el mensaje, pero en cuanto el primer galgo finalice es decir cuando el primer thread muera, cambiara el estado de la variable para que no vuelva a mostrar el mensaje.
+    
+    ```java
+    can.setStartAction(
+                new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+						//como acción, se crea un nuevo hilo que cree los hilos
+                        //'galgos', los pone a correr, y luego muestra los resultados.
+                        //La acción del botón se realiza en un hilo aparte para evitar
+                        //bloquear la interfaz gráfica.
+                        ((JButton) e.getSource()).setEnabled(false);
+                        new Thread() {
+                            public void run() {
+                                for (int i = 0; i < can.getNumCarriles(); i++) {
+                                    //crea los hilos 'galgos'
+                                    galgos[i] = new Galgo(can.getCarril(i), "" + i, reg);
+                                    //inicia los hilos
+                                    galgos[i].start();
+
+                                }
+                               boolean carreraGanada=false;
+                                for (Galgo g: galgos){
+                                    try {
+                                        g.join();
+                                        if(!carreraGanada) {
+                                            can.winnerDialog(reg.getGanador(), reg.getUltimaPosicionAlcanzada() - 1);
+                                            System.out.println("El ganador fue:" + reg.getGanador());
+                                            carreraGanada = true;
+                                        }
+                                    }catch (InterruptedException ex){
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            }
+                        }.start();
+
+                    }
+                }
+        );
+    ```
 
 2.  Una vez corregido el problema inicial, corra la aplicación varias
     veces, e identifique las inconsistencias en los resultados de las
