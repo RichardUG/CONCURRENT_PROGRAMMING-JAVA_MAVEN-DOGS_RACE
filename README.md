@@ -158,11 +158,11 @@ Parte III
     > 
     > Aca observamos que una vez llegado el primer galgo muestra el mensaje del ganador
     > 
-    > ![](/img/media/resultadocarrera1)
+    > ![](/img/media/resultadocarrera1.PNG)
     >
     > Ahora vemos el outpt de la aplicación por consola
     > 
-    > ![](/img/media/consolacarrera1)
+    > ![](/img/media/consolacarrera1.PNG)
     
 
 2.  Una vez corregido el problema inicial, corra la aplicación varias
@@ -202,7 +202,7 @@ Parte III
 	> 
 	> En este resultado que nos muestra la consela observamos que el problema ha sido solucionado y que cada posición esta asignada a un unico galgo
 	> 
-	> ![](/img/media/consolacarrera2)
+	> ![](/img/media/consolacarrera2.PNG)
 
 4.  Implemente las funcionalidades de pausa y continuar. Con estas,
     cuando se haga clic en ‘Stop’, todos los hilos de los galgos
