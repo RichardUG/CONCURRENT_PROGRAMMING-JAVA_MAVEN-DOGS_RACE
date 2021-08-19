@@ -1,5 +1,5 @@
 ### Escuela Colombiana de Ingeniería
-
+[<img src="https://img.youtube.com/vi/<VIDEO ID>/maxresdefault.jpg" width="50%">](https://youtu.be/<VIDEO ID>)
 ### Arquitecturas de Software – ARSW
 ## Laboratorio Programación concurrente, condiciones de carrera, esquemas de sincronización, colecciones sincronizadas y concurrentes - Caso Dogs Race
 
