@@ -1,4 +1,4 @@
-### Escuela Colombiana de Ingeniería
+﻿### Escuela Colombiana de Ingeniería
 ### Arquitecturas de Software – ARSW
 ## Laboratorio Programación concurrente, condiciones de carrera, esquemas de sincronización, colecciones sincronizadas y concurrentes - Caso Dogs Race
 
@@ -101,7 +101,7 @@ logre tomar el ‘1’ será el ganador.
 
 Al iniciar la aplicación, hay un primer error evidente: los resultados (total recorrido y número del galgo ganador) son mostrados antes de que finalice la carrera como tal. Sin embargo, es posible que una vez corregido esto, haya más inconsistencias causadas por la presencia de condiciones de carrera.
 
-Parte III
+### Parte III
 
 1.  Corrija la aplicación para que el aviso de resultados se muestre
     sólo cuando la ejecución de todos los hilos ‘galgo’ haya finalizado.
@@ -303,7 +303,14 @@ Parte III
 	> }
 	> ```
 
+### Autores
+* [Ana Maria Salazar Bohorquez](https://github.com/anamariasalazar)
+* [Richard Santiago Urrea Garcia](https://github.com/RichardUG)
 
+### Licencia & Derechos de Autor
+**©️** Ana Maria Salazar Bohorquez && Richard Santiago Urrea Garcia, Estudiantes de Ingeniería de Sistemas de la Escuela Colombiana de Ingeniería Julio Garavito
+
+Licencia bajo la [GNU General Public License](/LICENSE.txt)
     
 
 

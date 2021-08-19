@@ -56,16 +56,13 @@ public class Galgo extends Thread {
 	}
 
 	public void pause() {
-		if (pause) {
-			synchronized (MainCanodromo.getReg()) {
-				try {
-					MainCanodromo.getReg().wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+		synchronized (MainCanodromo.getReg()) {
+			try {
+				MainCanodromo.getReg().wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
-		pause=false;
 	}
 
 	public void setPause(boolean pause) {
