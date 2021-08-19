@@ -154,7 +154,7 @@ Parte III
     >
     > Podemos observar que ahora al iniciar la aplicación no nos muestra el mensaje de ganador
     > 
-    > ![](/img/media/Carera1.PNG)
+    > ![](/img/media/Carrera1.PNG)
     > 
     > Aca observamos que una vez llegado el primer galgo muestra el mensaje del ganador
     > 
